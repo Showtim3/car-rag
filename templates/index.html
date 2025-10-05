@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Car RAG QA</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #1e3c72, #2a5298);
+      color: white;
+    }
+
+    .container {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 30px;
+      border-radius: 15px;
+      width: 600px;
+      max-width: 90%;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(5px);
+    }
+
+    input {
+      width: 70%;
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+      margin-right: 10px;
+      outline: none;
+    }
+
+    button {
+      padding: 10px 20px;
+      border-radius: 8px;
+      border: none;
+      background-color: #ffdd57;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #ffc107;
+    }
+
+    .result {
+      margin-top: 20px;
+    }
+
+    pre {
+      background: rgba(255, 255, 255, 0.2);
+      padding: 10px;
+      border-radius: 8px;
+      overflow-x: auto;
+    }
+
+    #loader {
+      display: none;
+      margin-top: 20px;
+      font-weight: bold;
+      color: #ffdd57;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Car RAG QA</h1>
+    <input type="text" id="question" placeholder="Ask a question..." />
+    <button onclick="askQuestion()">Ask</button>
+
+    <div id="loader">Processing your query, please wait...</div>
+    <div class="result" id="result"></div>
+  </div>
+
+  <script>
+    async function askQuestion() {
+      const question = document.getElementById("question").value;
+      if (!question) return alert("Enter a question!");
+
+      const loader = document.getElementById("loader");
+      const resultDiv = document.getElementById("result");
+      loader.style.display = "block";
+      resultDiv.innerHTML = "";
+
+      try {
+        const response = await fetch("/ask", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ question })
+        });
+
+        const data = await response.json();
+
+        resultDiv.innerHTML = `<h3>Answer:</h3><pre>${data.answer}</pre>
+                               <h3>Top Documents:</h3>${data.top_docs.map(d => `<pre>${d}</pre>`).join('')}`;
+      } catch (err) {
+        resultDiv.innerHTML = `<pre style="color:red;">Error: ${err}</pre>`;
+      } finally {
+        loader.style.display = "none";
+      }
+    }
+  </script>
+</body>
+</html>

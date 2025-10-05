@@ -66,22 +66,22 @@ def ask(query: str):
     return {"answer": answer, "top_docs": top_docs}
 
 
-queries = [
-    "car with the most powerful engine",
-    "car with the most top speed",
-    "car with the highest price",
-    "cheapest car"
-]
+# queries = [
+#     "car with the most powerful engine",
+#     "car with the most top speed",
+#     "car with the highest price",
+#     "cheapest car"
+# ]
 
-for query in queries:
-    response = ask(query)
+# for query in queries:
+#     response = ask(query)
     
-    print(Fore.YELLOW + "=============")
-    print(Fore.GREEN + "Answer:\n" + Fore.CYAN + response["answer"])
+#     print(Fore.YELLOW + "=============")
+#     print(Fore.GREEN + "Answer:\n" + Fore.CYAN + response["answer"])
     
-    print(Fore.MAGENTA + "\nTop Documents:")
-    for i, doc in enumerate(response["top_docs"], start=1):
-        print(Fore.BLUE + f"\nDocument {i}:" + Fore.WHITE)
-        print(doc)
+#     print(Fore.MAGENTA + "\nTop Documents:")
+#     for i, doc in enumerate(response["top_docs"], start=1):
+#         print(Fore.BLUE + f"\nDocument {i}:" + Fore.WHITE)
+#         print(doc)
     
-    print(Fore.YELLOW + "=============\n")
+#     print(Fore.YELLOW + "=============\n")
