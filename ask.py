@@ -1,9 +1,10 @@
 import os
 from dotenv import load_dotenv
-from langchain.chains import RetrievalQA
-from langchain.llms import HuggingFacePipeline
+
 from langchain_pinecone import Pinecone as PineconeVectorStore
-from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain_huggingface import HuggingFaceEmbeddings
+from langchain_huggingface import HuggingFacePipeline
+
 from transformers import pipeline
 from langchain.prompts import PromptTemplate
 from langchain.chains import RetrievalQA
@@ -41,7 +42,6 @@ def ask(query: str):
 
     hf_pipeline = pipeline("text2text-generation", model="google/flan-t5-small", max_new_tokens=200)
     llm = HuggingFacePipeline(pipeline=hf_pipeline)
-
     qa = RetrievalQA.from_chain_type(
         llm=llm,
         retriever=retriever,
@@ -50,7 +50,7 @@ def ask(query: str):
     )
 
     # Single call
-    result = qa({"query": query})
+    result = qa.invoke(query)
 
     # Filter duplicates
     unique_docs = []
@@ -66,22 +66,22 @@ def ask(query: str):
     return {"answer": answer, "top_docs": top_docs}
 
 
-# queries = [
-#     "car with the most powerful engine",
-#     "car with the most top speed",
-#     "car with the highest price",
-#     "cheapest car"
-# ]
+queries = [
+    "car with the most powerful engine",
+    # "car with the most top speed",
+    # "car with the highest price",
+    # "cheapest car"
+]
 
-# for query in queries:
-#     response = ask(query)
+for query in queries:
+    response = ask(query)
     
-#     print(Fore.YELLOW + "=============")
-#     print(Fore.GREEN + "Answer:\n" + Fore.CYAN + response["answer"])
+    print(Fore.YELLOW + "=============")
+    print(Fore.GREEN + "Answer:\n" + Fore.CYAN + response["answer"])
     
-#     print(Fore.MAGENTA + "\nTop Documents:")
-#     for i, doc in enumerate(response["top_docs"], start=1):
-#         print(Fore.BLUE + f"\nDocument {i}:" + Fore.WHITE)
-#         print(doc)
+    print(Fore.MAGENTA + "\nTop Documents:")
+    for i, doc in enumerate(response["top_docs"], start=1):
+        print(Fore.BLUE + f"\nDocument {i}:" + Fore.WHITE)
+        print(doc)
     
-#     print(Fore.YELLOW + "=============\n")
+    print(Fore.YELLOW + "=============\n")
